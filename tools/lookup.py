@@ -18,6 +18,7 @@ Run build_index.py first if the index doesn't exist or sources changed.
 """
 
 import argparse
+import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -46,8 +47,9 @@ def search(query, tags_only=False, top_n=8):
         ).fetchall()
     else:
         # FTS5 search — handles natural language queries
-        # Convert natural query to FTS terms (OR between words for broader matching)
-        fts_query = " OR ".join(query.split())
+        # Strip punctuation that breaks FTS5 syntax, OR between words for broad match
+        clean = re.sub(r"[^\w\s-]", "", query)
+        fts_query = " OR ".join(clean.split())
         rows = conn.execute(
             "SELECT e.summary, e.file_path, e.anchor, e.tags, e.section, e.source_file "
             "FROM entries_fts fts "

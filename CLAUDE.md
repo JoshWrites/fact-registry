@@ -16,6 +16,21 @@ A research project to build an automated system for detecting factual contradict
 4. **Error-tolerant.** Missing data for a field doesn't break the system. New data types don't break existing records.
 5. **Document everything.** Negative results are as valuable as positive ones. Every experiment is logged.
 
+## Agent-Driven Operation
+
+This system is designed to be operated by an AI agent, directed and reviewed by a human. The human (a tech writer) sets priorities, reviews results, and makes editorial decisions. The agent runs extraction, resolution, conflict detection, and reporting. The design bar is not "can a human do this?" but "can an agent do this reliably with minimal supervision?"
+
+This principle affects every design choice: the pipeline must be automatable, errors must be surfaceable (not silent), and the human touchpoints must be well-defined review gates rather than continuous involvement.
+
+## Portability and Public Documentation
+
+This project is designed to be company-agnostic and platform-agnostic. No references to specific companies, products, or platforms appear in this repo. This is a hard requirement for three reasons:
+1. The tool should work on any technical KB, not just the current one
+2. The repo is public and serves as a portfolio piece
+3. If the research proves novel, it may warrant a conference talk or paper
+
+All company-specific data, configurations, and article content stay in private repos. This repo contains only methodology, findings, tools, and anonymized sample data.
+
 ## Current Phase
 
 Check `research/INDEX.md` for the authoritative state. That file is the map — this file is the compass.

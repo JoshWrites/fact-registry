@@ -20,15 +20,18 @@ Common questions mapped to the specific section that answers them. Read the sect
 
 ### Entity resolution
 - **How do you know two facts are about the same thing?** Open problem. Best approaches → [academic-cdcr-nlp.md#entity-linking](findings/academic-cdcr-nlp.md#entity-linking)
+- **Can labels solve entity identity?** No. Labels narrow domain but don't resolve entities within it → [N001](negative/N001-labels-dont-scope-entity-identity.md)
 - **Can LLMs do cross-document coreference?** Not alone. Need hybrid → [academic-cdcr-nlp.md#llm-cdcr](findings/academic-cdcr-nlp.md#llm-cdcr)
 - **What accuracy to expect on technical docs?** ~64 F1, drops from 76 on easy text → [academic-cdcr-nlp.md#cdcr-benchmarks](findings/academic-cdcr-nlp.md#cdcr-benchmarks)
 - **What makes entity matching hard?** Lexical diversity, near-miss entities, temporal evolution → [academic-cdcr-nlp.md#hard-cases](findings/academic-cdcr-nlp.md#hard-cases)
 - **How to build an entity registry from scratch?** Incremental matching → [D005](decisions/D005-post-hoc-resolution.md), sources: iText2KG, DIAL-KG in [BIBLIOGRAPHY.md#entity-resolution](BIBLIOGRAPHY.md#entity-resolution-and-coreference)
+- **Should we start resolution with a predefined schema?** Yes, build early. Self-canonicalization always underperforms target-aligned (EDC, EMNLP 2024) → [BIBLIOGRAPHY.md#entity-resolution](BIBLIOGRAPHY.md#entity-resolution-and-coreference)
 
 ### Contradiction detection
 - **Can NLI find contradictions?** Explicit yes, implicit misses 30-40% → [academic-cdcr-nlp.md#contradiction-detection](findings/academic-cdcr-nlp.md#contradiction-detection)
 - **What's the best approach?** NLI as filter, LLM as judge → [academic-cdcr-nlp.md#contradiction-detection](findings/academic-cdcr-nlp.md#contradiction-detection)
 - **Do contradictions in source docs actually hurt?** Yes, degrades RAG output → [successful-patterns.md#rag-research](findings/successful-patterns.md#rag-research)
+- **Can the system tell contradiction from version change?** No existing system can. Open problem → [N004](negative/N004-contradiction-vs-version-unsolved.md)
 
 ### Data model
 - **Why SQLite over a graph database?** Scale doesn't justify operational overhead → [D001](decisions/D001-sqlite-over-graph.md)
@@ -46,11 +49,19 @@ Common questions mapped to the specific section that answers them. Read the sect
 ### Claim decomposition
 - **Can LLMs break facts into entity+property+value?** ~90% precision (FActScore, SAFE) → [academic-cdcr-nlp.md#claim-decomposition](findings/academic-cdcr-nlp.md#claim-decomposition)
 - **Is there a schema-free approach?** EDC (EMNLP 2024), but self-canonicalization underperforms → [BIBLIOGRAPHY.md#entity-resolution](BIBLIOGRAPHY.md#entity-resolution-and-coreference)
+- **Are flat fact strings enough for conflict detection?** No. Need entity+property+value decomposition → [N003](negative/N003-flat-fact-strings-insufficient.md)
+
+### Costs and sustainability
+- **What does a full-corpus pass cost?** Preliminary estimate under $20 for one-time pass. Does NOT include ongoing per-article costs → [pipeline-cost-estimates.md](findings/pipeline-cost-estimates.md)
+- **What about ongoing costs?** Not estimated yet. Every new/edited article triggers extraction and resolution. Marginal per-article cost is the real number → [pipeline-cost-estimates.md#what-this-estimate-misses](findings/pipeline-cost-estimates.md#what-this-estimate-misses)
+- **What fraction of extractions need human review?** ~83% based on Knowledge Vault's 17% trust threshold → [failed-systems.md#systems](findings/failed-systems.md#systems) (Knowledge Vault entry)
 
 ### Meta / process
 - **How much metadata is enough?** Ranganathan's test: can you find the fact without knowing the article? → [library-science.md#ranganathans-test](findings/library-science.md#ranganathans-test)
 - **What's the risk of over-engineering the schema?** Cyc spent 40 years adding fields → [failed-systems.md#systems](findings/failed-systems.md#systems) (Cyc entry)
 - **How to prevent maintenance abandonment?** Automate. If updates require effort proportional to corpus size, they stop → [library-science.md#failure-modes](findings/library-science.md#failure-modes)
+- **Can you read the research index directly?** No, doesn't scale. Use two-pass subagent retrieval → [N002](negative/N002-direct-index-reading-doesnt-scale.md)
+- **Is this repo's structure itself a test case?** Yes. Three-layer reference (INDEX → findings → bibliography) mirrors the fact registry pattern (entity → claims → sources)
 
 ---
 
@@ -58,6 +69,7 @@ Common questions mapped to the specific section that answers them. Read the sect
 
 - [Landscape: failed systems](findings/failed-systems.md) — STATUS: complete — TAGS: prior-work, failure-modes
 - [Landscape: successful patterns](findings/successful-patterns.md) — STATUS: complete — TAGS: prior-work, architecture
+- [Early pipeline cost estimates](findings/pipeline-cost-estimates.md) — STATUS: preliminary — TAGS: costs, pipeline, sustainability
 - [Landscape: off-the-shelf survey](findings/off-the-shelf.md) — STATUS: complete — TAGS: prior-work, build-vs-buy
 - [Academic: CDCR and NLP](findings/academic-cdcr-nlp.md) — STATUS: complete — TAGS: academic, entity-resolution, contradiction-detection
 - [Analysis: Wikidata model](findings/wikidata-model.md) — STATUS: complete — TAGS: data-model, wikidata
@@ -74,7 +86,10 @@ Common questions mapped to the specific section that answers them. Read the sect
 
 ## Negative Results
 
-(None yet — experiments not started)
+- [N001: Labels don't scope entity identity](negative/N001-labels-dont-scope-entity-identity.md) — STATUS: rejected — TAGS: entity-resolution, labels, false-start
+- [N002: Direct index reading doesn't scale](negative/N002-direct-index-reading-doesnt-scale.md) — STATUS: rejected — TAGS: context-management, process
+- [N003: Flat fact strings insufficient](negative/N003-flat-fact-strings-insufficient.md) — STATUS: rejected — TAGS: data-model, fact-extraction, false-start
+- [N004: Contradiction vs version difference unsolved](negative/N004-contradiction-vs-version-unsolved.md) — STATUS: open-problem — TAGS: contradiction-detection, versioning
 
 ## Experiments
 
