@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Data — exclude by default, explicitly add what's safe
+data/*
+!data/.gitkeep
+!data/sample-*.json
+!data/README.md
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Experiment outputs that may contain proprietary content
+experiments/*/output/
+experiments/*/raw-data/
+
+# API keys, configs
+.env
+config.json
+config.local.*
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Embeddings and model artifacts
+*.bin
+*.pt
+*.onnx
+*.safetensors
+
+# Anything that might contain company-specific data
+# Be explicit about what you DO include
