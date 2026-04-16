@@ -53,3 +53,4 @@ Thumbs.db
 
 # Anything that might contain company-specific data
 # Be explicit about what you DO include
+tools/research_index.db

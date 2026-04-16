@@ -38,12 +38,29 @@ Read `research/decisions/` for full context on each. Summary:
 - Persistent claim-to-code or claim-to-UI links (maintenance cost exceeds value)
 - Pure LLM approaches to cross-document coreference (CRAC 2025 confirmed: LLMs alone can't do CDCR)
 
-## How to Navigate
+## How to Retrieve Prior Research
 
-- **Starting a new experiment?** Read `research/INDEX.md`, find related prior work, create a new numbered directory in `experiments/`.
+**Do not read research files directly into your main context.** Use two-pass retrieval:
+
+**Pass 1 — Scout.** Dispatch an Explore subagent against this repo:
+
+> "Read `research/INDEX.md` and `research/BIBLIOGRAPHY.md` in `/Users/jlevine/Documents/Repos/fact-registry`. Find everything we know about [TOPIC]. Follow links to the relevant finding/decision files and read only the matching sections. Return:
+> 1. A summary of what we know (under 200 words)
+> 2. For anything deep or nuanced: the exact file path and line range I should read myself (e.g. `findings/evidence-linking.md lines 11-38`)
+> 3. Whether this is settled (decision made) or open (still a question)"
+
+**Pass 2 — Targeted read.** Only if the scout says the full reasoning matters for your current task, read the specific lines it identified. Not the whole file. Not the whole directory.
+
+**Why this pattern:** Research files will grow to thousands of lines across dozens of files. Reading them into your main context wastes tokens and dilutes focus. The scout subagent absorbs the full research corpus in its own disposable context, extracts what's relevant, and returns a focused brief. Your context gets the conclusion and a pointer, not the raw material.
+
+**CLI fallback:** `python3 tools/lookup.py "your query"` uses SQLite FTS5 search across the index and bibliography. Useful for quick keyword lookups but lacks semantic understanding. Prefer the subagent for conceptual questions.
+
+## How to Navigate (for adding to the research)
+
+- **Starting a new experiment?** Scout for related prior work first, then create a new numbered directory in `experiments/`.
 - **Making an architecture decision?** Read existing decisions in `research/decisions/`, write a new ADR.
 - **Found something that doesn't work?** Write it up in `research/negative/` using the standard format.
-- **Updating findings?** Edit the relevant file in `research/findings/`, update `research/INDEX.md`.
+- **Updating findings?** Edit the relevant file in `research/findings/`, update `research/INDEX.md`, then rebuild the search index: `python3 tools/build_index.py`.
 
 ## Research Norms
 
